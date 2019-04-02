@@ -1,4 +1,4 @@
-/************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: dbruen <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/14 17:29:26 by dbruen            #+#    #+#             */
-/*   Updated: 2019/03/11 18:56:43 by dbruen           ###   ########.fr       */
+/*   Updated: 2019/03/25 19:19:00 by dbruen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ size_t			ft_strlcat(char *dest, char const *src, size_t size);
 char			*ft_strncat(char *dest, char const *src, size_t i);
 int				ft_strncmp(char const *s1, char const *s2, size_t len);
 char			*ft_strncpy(char *dest, char const *src, size_t n);
+char			*ft_strccpy(char *dest, char const *src, char c);
 int				ft_strnequ(char const *s1, char const *s2, size_t n);
 char			*ft_strnew(size_t size);
 char			*ft_strdup(char const *src);
