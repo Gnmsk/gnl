@@ -5,12 +5,14 @@
 
 #include "get_next_line.h"
 
-char	*find_line(char *buffer_for_check)
+char	find_line(char *buffer_for_check, char **line)
 {
 	if (ft_strchr(buffer_for_check, '\n') == NULL)
-		return(NULL);
+		return (NULL);
 	else
-
+	{
+		ft_strccpy((char *)&line, buffer_for_check, '\n');
+	}
 }
 
 static	gnl_list	*find_list(int fd, gnl_list **mem_list)
@@ -28,8 +30,8 @@ static	gnl_list	*find_list(int fd, gnl_list **mem_list)
 	}
 	if (!(temp = (gnl_list *)malloc(sizeof(gnl_list))))
 		return(NULL);
-	if (!(temp->fd = (int *)malloc(sizeof(int))))
-		return(NULL);
+//	if (!(temp->fd = (int)malloc(sizeof(int))))
+//		return(NULL);
 	if (!(temp->data = ft_strnew(0)))
 		return(NULL);
 	temp->fd = fd;
@@ -49,20 +51,12 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	buffer[BUFF_SIZE] = '\0';
 //	ft_strccpy(*line, buffer, '\n');
-	if (find_line(find_list(fd, &memory_lists->data)) == NULL)
+	while (find_line(find_list(fd, &memory_lists)->data,&(*line)) == NULL)
 	{
-		while(find_line(find_list(fd, &memory_lists->data)))
-		{
-			ft_strrejoin(&memory_lists->data, buffer);
-			find_line(memory_lists->data);
-			read(fd, buffer, BUFF_SIZE);
-			buffer[BUFF_SIZE]= '\0';
-		}
+		memory_lists->data = ft_strrejoin(&memory_lists->data, buffer);
+		read(fd, buffer, BUFF_SIZE);
+		buffer[BUFF_SIZE]= '\0';
 	}
-	if ()
--		;
--
--
 }
 
 int	main(int argc, char **argv)
