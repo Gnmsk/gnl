@@ -2,7 +2,10 @@
 //depending on whether a line has been read,
 //when the reading has been completed, 
 //or if an error has happened respectively.
-
+//zc – свернуть блок
+//zo – развернуть блок
+//zM – закрыть все блоки
+//zR – открыть все блоки
 #include "get_next_line.h"
 
 char	find_line(char *buffer_for_check, char **line)

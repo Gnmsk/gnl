@@ -1,0 +1,73 @@
+#include <stdio.h>
+2	#include <unistd.h>
+3	
+4	void    *ft_memset(void *s, int c, int size)
+5	{
+6	        int             i;
+7	        char    *s1;
+8	
+9	        s1 = s;
+10	        i = 0;
+11	        while (size > 0)
+12	        {
+13	                s1[i] = c;
+14	                i++;
+15	                size--;
+16	        }
+17	        return (s1);
+18	}
+19	
+20	void    ft_bzero(void *s, size_t n)
+21	{
+22	        ft_memset(s, 0, n);
+23	}
+24	
+25	char    *ft_strnew(size_t size)
+26	{
+27	        char    *newstr;
+28	
+29	        if (size + 1 < size)
+30	                return (NULL);
+31	        if (!(newstr = (char *)malloc(size + 1)))
+32	                return (NULL);
+33	        ft_bzero(newstr, size + 1);
+34	        return (newstr);
+35	}
+36	void    rest(char *ptr, char **memory_str)
+37	{
+38	        while (*ptr)
+39	        {
+40	                **memory_str = *ptr;
+41	                ptr++;
+42	                memory_str++;
+43	        }
+44	}
+45	
+46	char    *f_strchr(char const *src, char a, char **memory)
+47	{
+48	        size_t i;
+49	
+50	        i = 0;
+51	        while (src[i] != '\0')
+52	        {
+53	                if (src[i] == a)
+54	                {
+55	                        rest ((char *)src + i, &(*memory));
+56	                        break;
+57	                }
+58	                i++;
+59	        }
+60	        if (!a && src[i] == '\0')
+61	                rest ((char *)src + i, &(*memory));
+62	        return (NULL);
+63	}
+64	
+65	int     main()
+66	{
+67	        char str[] = "London is the ca";
+68	        char *memory;
+69	        memory = ft_strnew(10);
+70	        f_strchr(str, 'i', &memory);
+71	        printf("%s",memory);
+72	        return (0);
+73	}
