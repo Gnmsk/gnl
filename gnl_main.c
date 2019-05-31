@@ -8,14 +8,29 @@
 //zR – открыть все блоки
 #include "get_next_line.h"
 
-char	find_line(char *buffer_for_check, char **line)
+int	memory_request(char *memory)
 {
-	if (ft_strchr(buffer_for_check, '\n') == NULL)
-		return (NULL);
-	else
+	if (ft_strchr(memory, '\n'))
 	{
-		ft_strccpy((char *)&line, buffer_for_check, '\n');
+		return (1);
 	}
+	if (ft_strchr(memory, '\0'))
+		return (0);
+	return (NULL);
+}
+
+void	find_line(char **memory, char **line)
+{
+	int	i;
+	char	*temp;
+
+	i = 0;
+	*temp = **memory;
+//Нужно из мемори вырезать (скопировать + удалить скопированную область)
+// кусок строки и переместить его в лайн, перед этим, как я понимаю, нужно замолочить лайн
+// под размер вырезаемого куска, затем указатель мемори перенести на новое место.
+	
+	  
 }
 
 static	gnl_list	*find_list(int fd, gnl_list **mem_list)
@@ -33,8 +48,6 @@ static	gnl_list	*find_list(int fd, gnl_list **mem_list)
 	}
 	if (!(temp = (gnl_list *)malloc(sizeof(gnl_list))))
 		return(NULL);
-//	if (!(temp->fd = (int)malloc(sizeof(int))))
-//		return(NULL);
 	if (!(temp->data = ft_strnew(0)))
 		return(NULL);
 	temp->fd = fd;
@@ -47,18 +60,24 @@ int	get_next_line(int fd, char **line)
 {
         char    	buffer[BUFF_SIZE + 1];
 	static gnl_list	*memory_lists;
-	int i;
 
-	i = 0;
-	if (fd < 0 || !line || read(fd, buffer, BUFF_SIZE) < 0)
-		return (-1);
-	buffer[BUFF_SIZE] = '\0';
-//	ft_strccpy(*line, buffer, '\n');
-	while (find_line(find_list(fd, &memory_lists)->data,&(*line)) == NULL)
+	while (memory_request(find_list(fd, &memory_lists)-> data) == NULL)
 	{
-		memory_lists->data = ft_strrejoin(&memory_lists->data, buffer);
-		read(fd, buffer, BUFF_SIZE);
-		buffer[BUFF_SIZE]= '\0';
+		if (fd < 0 || !line || read(fd, buffer, BUFF_SIZE) < 0)
+			return (-1);
+		buffer[BUFF_SIZE] = '\0';
+		if (ft_strrejoin(&memory_lists -> data, buffer))
+		{
+			return (-1);
+		}
+	}
+	if (memory_request(find_list(fd, &memory_lists)-> data) == 1)
+	{
+		return (1);
+	}
+	if (memory_request(find_list(fd, &memory_lists)-> data) == 0)
+	{
+		return (0);
 	}
 }
 
@@ -81,12 +100,12 @@ int	main(int argc, char **argv)
 			get_next_line(fd, &line);
 			get_next_line(fd2, &line2);
 			printf("%s\n%s \n", line, line2);
-			/*while (get_next_line(fd, &line) > 0)
+			while (get_next_line(fd, &line) > 0)
 			{
 				get_next_line(fd, &line);
 				printf("%s", line);
 			}
-			printf("%s", "EOF");*/
+			printf("%s", "EOF");
 		}
 		else
 		{
