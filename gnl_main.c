@@ -22,15 +22,15 @@ int	memory_request(char *memory)
 void	find_line(char **memory, char **line)
 {
 	int	i;
-	char	*temp;
 
 	i = 0;
-	*temp = **memory;
+	while (*(memory[i]) != '\0' && *(memory[i] != '\n'))
+		i++;
+	*line = ft_strnew[i];
 //Нужно из мемори вырезать (скопировать + удалить скопированную область)
 // кусок строки и переместить его в лайн, перед этим, как я понимаю, нужно замолочить лайн
 // под размер вырезаемого куска, затем указатель мемори перенести на новое место.
 	
-	  
 }
 
 static	gnl_list	*find_list(int fd, gnl_list **mem_list)

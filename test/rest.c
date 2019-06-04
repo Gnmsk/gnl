@@ -3,11 +3,13 @@
 
 void	rest(char *ptr, char **memory_str)
 {
-	while (*ptr)
+	size_t i;
+
+	i = 0;
+	while (ptr[i])
 	{
-		(char *)memory_str = (char *)ptr;
-		ptr++;
-		memory_str++;
+		*(memory_str[i]) = ptr[i];
+		i++;
 	}
 }
 
@@ -19,18 +21,21 @@ char    *f_strchr(char const *src, char a, char **memory)
         while (src[i] != '\0')
         {
                 if (src[i] == a)
-                        rest ((char *)src + i, &(*memory));
+		{
+                        rest ((char *)src + i, **memory);
+			break;
+		}
                 i++;
         }
         if (!a && src[i] == '\0')
-		rest ((char *)src + i, &(*memory));
+		rest ((char *)src + i, **memory);
         return (NULL);
 }
 
 
 int	main()
 {
-	char str[] = "London is the capital of Great Britan";
+	char str[] = "London is the capital";
 	char *memory;
 	memory = ft_strnew(100);
 	f_strchr(str, 'i', &memory);
