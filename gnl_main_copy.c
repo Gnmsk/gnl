@@ -60,21 +60,16 @@ int	get_next_line(int fd, char **line)
 {
         char    	buffer[BUFF_SIZE + 1];
 	static gnl_list	*memory_lists;
-	gnl_list	*memory;
 
-	if (!(memory = find_list(fd, &memory_lists)))
+	while (memory_request(find_list(fd, &memory_lists)-> data) == NULL)
 	{
-		return(-1);
-	}
-	if (fd < 0 || !line || read(fd, buffer, BUFF_SIZE) < 0)
-		return (-1);
-	buffer[BUFF_SIZE] = '\0';
+		if (fd < 0 || !line || read(fd, buffer, BUFF_SIZE) < 0)
+			return (-1);
+		buffer[BUFF_SIZE] = '\0';
 		if (ft_strrejoin(&memory_lists -> data, buffer))
 		{
 			return (-1);
 		}
-
-	//
 	}
 	if (memory_request(find_list(fd, &memory_lists)-> data) == 1)
 	{
