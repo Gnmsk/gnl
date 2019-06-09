@@ -27,10 +27,6 @@ void	find_line(char **memory, char **line)
 	while (*(memory[i]) != '\0' && *(memory[i] != '\n'))
 		i++;
 	*line = ft_strnew[i];
-//Нужно из мемори вырезать (скопировать + удалить скопированную область)
-// кусок строки и переместить его в лайн, перед этим, как я понимаю, нужно замолочить лайн
-// под размер вырезаемого куска, затем указатель мемори перенести на новое место.
-	
 }
 
 static	gnl_list	*find_list(int fd, gnl_list **mem_list)
@@ -62,27 +58,16 @@ int	get_next_line(int fd, char **line)
 	static gnl_list	*memory_lists;
 	gnl_list	*memory;
 
+	if (fd < 0 || !line || read(fd, buffer, BUFF_SIZE) < 0)
+                return (-1);
+	buffer[BUFF_SIZE] = '\0';
 	if (!(memory = find_list(fd, &memory_lists)))
 	{
 		return(-1);
 	}
-	if (fd < 0 || !line || read(fd, buffer, BUFF_SIZE) < 0)
+	if (ft_strrejoin(&memory_lists -> data, buffer))
+	{
 		return (-1);
-	buffer[BUFF_SIZE] = '\0';
-		if (ft_strrejoin(&memory_lists -> data, buffer))
-		{
-			return (-1);
-		}
-
-	//
-	}
-	if (memory_request(find_list(fd, &memory_lists)-> data) == 1)
-	{
-		return (1);
-	}
-	if (memory_request(find_list(fd, &memory_lists)-> data) == 0)
-	{
-		return (0);
 	}
 }
 
