@@ -1,68 +1,96 @@
 #include "get_next_line.h"
-/*• Write a function that returns a line read from a file descriptor.
-• What we call a “line” is a succession of characters that end with ’\n’ (ascii code
-0x0a) or with End Of File (EOF).
-The first parameter is the file descriptor that will be used to read.
-• The second parameter is the address of a pointer to a character that will be used
-to save the line read from the file descriptor.
-• The return value can be 1, 0 or -1 depending on whether a line has been read,
-when the reading has been completed, or if an error has happened respectively.
-• Your function get_next_line must return its result without ’\n’.
-• Calling your function get_next_line in a loop will then allow you to read the text
-available on a file descriptor one line at a time until the end of the text, no matter
-the size of either the text or one of its lines.
-• Make sure that your function behaves well when it reads from a file, from the
-standard output, from a redirection etc.
-• In you header file get_next_line.h you must have at least the prototype of the
-function get_next_line and a macro that allows to choose the size of the reading
-buffer for the read function. This value will be modified during the defence to
-evaluate the strength of your function. That macro must be named BUFF_SIZE.*/
+#include "libft.h"
 
-//Замолочить буфер под read
-//Прочитать из дескриптора в буфер
-//Чекнуть буфер на \n \0
-//Перенести в line
-//Замолочить массив в структуре под остаток
-//Перенести остаток в структуру (СТАТИК)
-
-int		get_next_line(const int fd, char **line)
+static char		*get_line(char **curr_data)
 {
-	char			buffer[BUFF_SIZE +1]; //буфер для чтения 
-	char			*memory_data;	// сюда пишем остаток для структуры
-	char			*ptr;
-	int			memory_fd; //дискриптор для структуры
-	static	gnl_list	memory;	// структура для остатков
-	int			readed; //количество символов возвращенных read'ом при удачном чтении
-	
-	if(fd < 0 || !line || read(fd, buffer, 0) < 0)
-		return (-1);
-	buffer[read(fd, buffer, BUFF_SIZE)] = '\0';
-	ptr = buffer;
-	while (ptr <= strchr(buffer, '\n'))
-	{
-		*line = *ptr;
-	}
-}
+	char	*res;
+	char	*temp;
+	size_t	i;
 
-temp_list	*ft_newstruct(int fd, char *data) // Не готово
-{
-	temp_list *new;
-
-	if(!(new = (temp_list*)malloc(sizeof(temp_list))))
+	i = 0;
+	if (!(temp = ft_strdup(*curr_data)))
 		return (NULL);
-	if (fd == NULL || data == NULL)
+	while (temp[i] != '\n' && temp[i])
+		i++;
+	if (!(res = ft_strnew(i)))
+		return (NULL);
+	ft_strncpy(res, *curr_data, i);
+	ft_strdel(curr_data);
+	if (i < ft_strlen(temp))
 	{
-		free(new);
-		return (NULL);
+		if (!(*curr_data = ft_strdup(temp + i + 1)))
+			return (NULL);
 	}
 	else
 	{
-		if (!(new->fd =)  /*доделать замолачивание
-				    данных под номер дикриптера
-				    и содержание *дата */
+		if (!(*curr_data = ft_strdup("\0")))
+			return (NULL);
 	}
-	new->next = NULL;
-	return (new);
+	ft_strdel(&temp);
+	return (res);
+}
+
+static char		*ft_strjoinfree(char **curr_data, char *buf)
+{
+	char	*res;
+	size_t	i;
+
+	i = ft_strlen(*curr_data) + ft_strlen(buf);
+	if (!(res = ft_strnew(i)))
+		return (NULL);
+	ft_strcpy(res, *curr_data);
+	ft_strcat(res, buf);
+	ft_strdel(curr_data);
+	return (res);
+}
+
+static gnl_list	*find_fd(gnl_list **mem_list, int fd)
+{
+	gnl_list	*temp;
+
+	temp = *mem_list;
+	while (temp)
+	{
+		if (temp->fd == fd)
+			return (temp);
+		temp = temp->next;
+	}
+	if (!(temp = (gnl_list *)malloc(sizeof(gnl_list))))
+		return (NULL);
+	if (!(temp->data = ft_strnew(0)))
+		return (NULL);
+	temp->fd = fd;
+	temp->next = *mem_list;
+	*mem_list = temp;
+	return (temp);
+}
+
+int				get_next_line(const int fd, char **line)
+{
+	static gnl_list	*mem_list;
+	gnl_list			*curr;
+	char			buf[BUFF_SIZE + 1];
+	int				ret;
+
+	if (fd < 0 || !line || read(fd, buf, 0) < 0)
+		return (-1);
+	if (!(curr = find_fd(&mem_list, fd)))
+		return (-1);
+	ret = 0;
+	while (!(ft_strchr(curr->data, '\n')) &&
+			(ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[ret] = '\0';
+		if (!(curr->data = ft_strjoinfree(&curr->data, buf)))
+			return (-1);
+		if (ft_strchr(buf, '\n'))
+			break ;
+	}
+	if (ret < BUFF_SIZE && !(ft_strlen(curr->data)))
+		return (0);
+	if (!(*line = get_line(&curr->data)))
+		return (-1);
+	return (1);
 }
 
 
