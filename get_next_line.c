@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbruen <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/13 19:08:57 by dbruen            #+#    #+#             */
+/*   Updated: 2019/06/13 19:25:02 by dbruen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 #include "libft.h"
 
@@ -68,7 +80,7 @@ static gnl_list	*find_fd(gnl_list **mem_list, int fd)
 int				get_next_line(const int fd, char **line)
 {
 	static gnl_list	*mem_list;
-	gnl_list			*curr;
+	gnl_list		*curr;
 	char			buf[BUFF_SIZE + 1];
 	int				ret;
 
@@ -92,5 +104,3 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	return (1);
 }
-
-
