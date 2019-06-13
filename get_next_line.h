@@ -26,7 +26,7 @@ typedef struct		gnl_list
 	int				fd;
 	char			*data;
 	struct gnl_list	*next;
-}					g_list;
+}					gnl_list;
 
 int					get_next_line(const int fd, char **line);
 
